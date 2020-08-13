@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: kub-base-deployment
+spec:
+    replicas: 2
+    selector:
+       matchLabels:
+          app: kub-base-app
+    template:
+       metadata:
+          labels:
+             app: kub-base-app
+       spec:
+          containers:
+          - name: 04-kub-base
+            image: wasil/04-kub-base:v2
+            ports:
+              - name: web 
+                containerPort: 8000
+            livenessProbe:
+              httpGet:
+                port: 8000
+                path: /
+              initialDelaySeconds: 10
+              periodSeconds: 5
+              timeoutSeconds: 2
+            readinessProbe:
+              httpGet:
+                port: 8000
+                path: /health
+              initialDelaySeconds: 10
+              periodSeconds: 5
